@@ -1,10 +1,10 @@
 {
-  "presets": [["@babel/preset-env"]],
+  "presets": ["@babel/preset-flow", "@babel/preset-env"],
   "plugins": [
     [
-      "transform-react-jsx",
+      "@babel/transform-react-jsx",
       {
-        "pragma": "Funny.createElement"
+        "pragma": "Noact.createElement"
       }
     ]
   ]

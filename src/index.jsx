@@ -1,25 +1,31 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { useState } from 'react'
+import Noact from 'noact'
+import { useState } from 'noact'
 
 function App(props) {
-  const [count, setCount] = useState()
-  const onclick = (e) => {
-    setCount(count + 1)
-  }
+  const [flag, setFlag] = useState(false)
+  const arr = flag ? [3, 2, 1] : [1, 2, 3]
+  const switchFlag = () => setFlag(!flag)
+
   return (
     <div>
-      <div>
-        <button onclick={onclick}>click me</button>
-      </div>
-      <div>{count}</div>
+      <button onClick={switchFlag}>switch</button>
+      {arr.map((x) => (
+        <Counter key={x}>
+          <div>hello</div>
+        </Counter>
+      ))}
+    </div>
+  )
+}
+function Counter(props) {
+  const [count, setCount] = useState(0)
+  return (
+    <div>
+      <button onClick={() => setCount(1 + count)}>click</button>
+      {props.children}
+      {count}
     </div>
   )
 }
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('app')
-)
+Noact.render(<App />, document.getElementById('app'))

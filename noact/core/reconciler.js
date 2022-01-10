@@ -1,17 +1,16 @@
 import Renderer from './renderer'
-import { nextTick } from '../utils'
+import { generateVdom, update } from './fiber'
+
 const Reconciler = {
   container: null,
   vdom: null,
-  updating: false,
 
-  init(root, container) {
+  render(root, container) {
     // clear container
     container.innerHTML = ''
     this.container = container
     // render vdom
-    this.vdom = Renderer.renderComponent(root)
-    console.log(this.vdom)
+    this.vdom = generateVdom(root)
     // render real dom from vdom
     Renderer.renderVdom(this.vdom, this.container)
   },
@@ -21,23 +20,15 @@ const Reconciler = {
     let newNode = null
     // if the updated vnode is the root, set the new root
     if (!parent) {
-      newNode = Renderer.update(vnode)
+      newNode = update(vnode)
       this.vdom = newNode
     } else {
       // otherwise,replace part of the tree
       const index = parent.children.indexOf(vnode)
-      newNode = Renderer.update(vnode)
-      parent.children[index] = newNode
+      parent.children[index] = update(vnode)
     }
-    if (!this.updating) {
-      this.updating = true
-      nextTick(() => {
-        this.container.innerHTML = ''
-        Renderer.renderVdom(this.vdom, this.container)
-        // process multiple updates in one tick
-        this.updating = false
-      })
-    }
+    this.container.innerHTML = ''
+    Renderer.renderVdom(this.vdom, this.container)
   },
 }
 
